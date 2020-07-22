@@ -1,6 +1,6 @@
 # Task background
 
-As a company dealing with environmental commodities, we want to digitalize the market, providing a software solution, which will help companies. One of the services we want to provide is the "live markets" where people can instantly buy or trade goods.
+As a company dealing with environmental commodities, we want to digitalize the market, providing a software solution, which will help companies. One of the services that we want to provide is the "live markets" where people can instantly buy or trade goods.
 
 ## Your task:
 is to provide simple "live markets" - where one can place a bid order to buy good or place an ask order to sell good.
