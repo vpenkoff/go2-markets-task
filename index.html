@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Markets</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+
+    <div id="app">
+        <select v-model="orderDirection">
+            <option>buy</option>
+            <option>sell</option>
+        </select>
+        <label>
+            Price
+            <input type="number" step="0.01" name="orderPrice" v-model.number="orderPrice">
+        </label>
+        <label>
+            Size
+            <input type="number" name="orderSize" v-model.number="orderSize">
+        </label>
+        <button v-on:click="placeOrder">Place Order</button>
+        <hr>
+
+        <div class="orderbook-container">
+            <orderbook-side title="Bids" side="bids" v-bind:orders="bids" key="bids"></orderbook-side>
+            <orderbook-side title="Asks" side="asks" v-bind:orders="asks" key="asks"></orderbook-side>
+        </div>
+
+        <trade-history v-bind:fills="fills" v-bind:user-id="userId" key="fills"></trade-history>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
