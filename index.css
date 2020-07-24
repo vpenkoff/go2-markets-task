@@ -1,0 +1,34 @@
+.orderbook-container {
+    display: flex;
+    max-width: 500px;
+}
+
+.orderbook-side {
+    width: 50%;
+    margin: 10px;
+}
+
+.orderbook-side table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orderbook-side.bids {
+    text-align: right;
+}
+
+.orderbook-side.asks {
+    text-align: left;
+}
+
+.trade-history table {
+    border-collapse: collapse;
+}
+
+.trade-history table tr {
+    border-bottom: 1px solid black;
+}
+
+.trade-history table td {
+    padding: 8px;
+}

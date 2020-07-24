@@ -18,6 +18,10 @@ is to provide simple "live markets" - where one can place a bid order to buy goo
 * Use any language/ framework
 
 ## Submission
-Fork this repo. When ready, make a pull request. That's it.
+Please note that this implementation is intentionally missing many details due to time restrictions, including but not limited to:
 
-### Good luck!
+* a backend
+* styling
+* tests
+* project structure (such as `package.json`, components in separate files, etc)
+* proper form validation, rate limits, self-trading checks, locking, not exposing orders' user IDs, etc
