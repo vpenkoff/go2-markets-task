@@ -4,6 +4,7 @@
     <title>Live Markets</title>
     <link rel="stylesheet" href="index.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -20,7 +21,7 @@
             Size
             <input type="number" name="orderSize" v-model.number="orderSize">
         </label>
-        <button v-on:click="placeOrder">Place Order</button>
+        <button v-on:click="submitOrder">Place Order</button>
         <hr>
 
         <div class="orderbook-container">

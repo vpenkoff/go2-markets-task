@@ -83,7 +83,17 @@ Vue.component('orderbook-side', {
 
 var app = new Vue({
     el: '#app',
+		created: function () {
+			var that = this;
+			this.socket.on('connect', function() {
+				console.log('connected');
+			});
+			this.socket.on('new_order', function(data) {
+				that.placeOrder(JSON.parse(data));
+			});
+		},
     data: {
+			socket: io('http://' + location.hostname + ':5000'),
         userId: 1,
         orderDirection: 'buy',
         orderPrice: 0.6, // initial demo values
@@ -123,9 +133,7 @@ var app = new Vue({
       },
     },
     methods: {
-      placeOrder: function () {
-        let orderSubmittedAt = new Date();
-
+			submitOrder: function() {
         // form validation
         if (this.orderPrice <= 0) {
           alert('Invalid order price');
@@ -135,15 +143,24 @@ var app = new Vue({
           alert('Invalid oder size');
         }
 
+				this.socket.emit('new_order', JSON.stringify({
+					orderPrice: this.orderPrice,
+					orderSize: this.orderSize,
+					orderSubmittedAt: new Date(),
+					orderDirection: this.orderDirection
+				}));
+			},
+      placeOrder: function (data) {
+				console.log(data);
         // check against existing orders
         // note: intentional redundancy for readability purposes
-        var remainingSize = this.orderSize;
-        if (this.orderDirection === 'buy') {
+        var remainingSize = data.orderSize;
+        if (data.orderDirection === 'buy') {
           let asksToRemove = [];
 
           // try to match order against asks from the orderbook
           for (let ask of this.sortedAsks) {
-            if (this.orderPrice < ask.price || remainingSize <= 0) {
+            if (data.orderPrice < ask.price || remainingSize <= 0) {
               break; // no matching order or no size left, break off
             }
 
@@ -163,14 +180,14 @@ var app = new Vue({
               direction: 'sell',
               price: ask.price,
               size: fillSize,
-              filledAt: orderSubmittedAt,
+              filledAt: data.orderSubmittedAt,
               userId: ask.userId,
             });
             this.fills.push({
               direction: 'buy',
               price: ask.price,
               size: fillSize,
-              filledAt: orderSubmittedAt,
+              filledAt: data.orderSubmittedAt,
               userId: this.userId,
             });
           }
@@ -181,13 +198,13 @@ var app = new Vue({
             this.asks.splice(index, 1);
           }
 
-        } else if (this.orderDirection === 'sell') {
+        } else if (data.orderDirection === 'sell') {
           let bidsToRemove = [];
 
           // try to match order against bids from the orderbook
           for (let bid of this.sortedBids) {
             let fillSize;
-            if (this.orderPrice > bid.price || remainingSize <= 0) {
+            if (data.orderPrice > bid.price || remainingSize <= 0) {
               break; // no matching order or no size left, break off
             }
 
@@ -206,14 +223,14 @@ var app = new Vue({
               direction: 'buy',
               price: bid.price,
               size: fillSize,
-              filledAt: orderSubmittedAt,
+              filledAt: data.orderSubmittedAt,
               userId: bid.userId,
             });
             this.fills.push({
               direction: 'sell',
               price: bid.price,
               size: fillSize,
-              filledAt: orderSubmittedAt,
+              filledAt: data.orderSubmittedAt,
               userId: this.userId,
             });
           }
@@ -231,14 +248,14 @@ var app = new Vue({
 
         // if remaining size, add it to orderbook
         let order = {
-          price: this.orderPrice,
+          price: data.orderPrice,
           size: remainingSize,
           userId: this.userId,
-          createdAt: orderSubmittedAt,
+          createdAt: data.orderSubmittedAt,
         };
-        if (this.orderDirection === 'buy') {
+        if (data.orderDirection === 'buy') {
           this.bids.push(order);
-        } else if (this.orderDirection === 'sell') {
+        } else if (data.orderDirection === 'sell') {
           this.asks.push(order);
         }
       }
